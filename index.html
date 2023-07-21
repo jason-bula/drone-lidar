@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ROS 2 Topic Viewer</title>
+</head>
+<body>
+    <h1>ROS 2 Topic Viewer</h1>
+    <div id="topicData"></div>
+
+    <script src="roslib.min.js"></script>
+    <script>
+        // Remplacez 'topic_name' par le nom du topic que vous souhaitez visualiser
+        const topicName = '/imu/data';
+
+        // Créez un objet ROSLIB.Topic pour écouter le topic
+        const ros = new ROSLIB.Ros({
+            url: 'ws://localhost:9090' // Assurez-vous que le ROS 2 Web Bridge est en cours d'exécution sur le port 9090
+        });
+
+        const topic = new ROSLIB.Topic({
+            ros: ros,
+            name: topicName,
+            messageType: 'std_msgs/String' // Remplacez par le type du message que vous attendez
+        });
+
+        // Mettez à jour le contenu de la div avec les données reçues du topic
+        topic.subscribe(function (message) {
+            const topicDataDiv = document.getElementById('topicData');
+            topicDataDiv.innerHTML = JSON.stringify(message);
+        });
+    </script>
+</body>
+</html>
+

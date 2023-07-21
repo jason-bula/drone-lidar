@@ -1,0 +1,33 @@
+version: '1'
+
+services:
+    xsense_node:
+        build:
+            dockerfile: docker/01_xsens/Dockerfile
+        devices:
+            - /dev/bus/usb/001/003
+            - /dev/ttyUSB0
+        command: ros2 run xsens_driver mtnode.py      
+    
+    xsense_stream:
+        build:
+            dockerfile: docker/01_xsens/Dockerfile
+        command: bash -c "while ! ros2 topic echo /imu/data; do sleep 1; done"
+    
+    socket_node:
+        build:
+            dockerfile: docker/03_socket/Dockerfile
+        network_mode: "host"
+        command: bash -c "while ! ros2 run topic_to_socket test; do sleep 1; done"
+        
+    livox_node:
+        build:
+            dockerfile: docker/02_livox/Dockerfile
+        network_mode: "host"
+        command: bash -c "while ! ros2 launch livox_lidar_launch.py; do sleep 1; done"
+
+    livox_stream:
+        build:
+            dockerfile: docker/02_livox/Dockerfile
+        network_mode: "host"
+        command: bash -c "while ! ros2 topic echo /livox/lidar; do sleep 1; done"
