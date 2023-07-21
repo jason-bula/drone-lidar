@@ -1,2 +1,2 @@
-# drone-lidar
-# HEIG
+# Drone-lidar
+## HEIG
